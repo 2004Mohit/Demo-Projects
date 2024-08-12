@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -23,6 +24,9 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class HomePage extends Application {
+    //Scene & stage of Guessing Number Game
+    private Scene sc;
+    private Stage stage;
     // Variables to hold the number to guess and user's input
     private int guessNum, userNum;
     // Variables to track the number of attempts
@@ -37,11 +41,13 @@ public class HomePage extends Application {
     // Alerts for showing messages to the user
     Alert congo = new Alert(AlertType.INFORMATION);
     Alert exceptionAlert = new Alert(AlertType.WARNING);
+    Alert ask = new Alert(AlertType.NONE, null, ButtonType.YES, ButtonType.NO);
 
     // Method to generate a random number between 1 and 100
     public void GuessNum() {
         guessNum = (int)(Math.random() * 100) + 1;
         System.out.println("Number To Guess : " + guessNum);
+        return;
     }
 
     // Method to check Guess Number
@@ -54,8 +60,16 @@ public class HomePage extends Application {
             if (userNum == guessNum) {
                 congo.setContentText("Congratulations !!\nYou Won");
                 congo.showAndWait();
-                numInput.clear();
-                Restart();
+                ask.setHeaderText("Do You Want To Guess New Number Again ?");
+                ask.setContentText(null);
+                ask.showAndWait().ifPresent(response -> {
+                    if(response == ButtonType.YES) {
+                        numInput.clear();
+                        Restart();
+                    } else {
+                        stage.close();
+                    }
+                });;
                 return;
 
             } else if ((userNum > (guessNum - 5)) && (userNum < guessNum)) {
@@ -79,6 +93,7 @@ public class HomePage extends Application {
             // Decrement the number of attempts and update the label
             attempts--;
             Attempts = attempts;
+            System.out.println("It is Continue");
             Attempt.setText("Remaining Attempts : " + Attempts);
 
             // Check if the user has run out of attempts
@@ -168,7 +183,6 @@ public class HomePage extends Application {
             public void handle(ActionEvent event) {
 
                 // Reset the game state
-                GuessNum();
                 Restart();
             }
         });
@@ -197,8 +211,9 @@ public class HomePage extends Application {
         flow.setAlignment(Pos.CENTER);
 
         // Create and set the scene
-        Scene sc = new Scene(flow, 1000, 1000);
+        sc = new Scene(flow, 1000, 1000);
         stage.setScene(sc);
+        this.stage = stage;
         stage.setMaximized(true);
         stage.setTitle("Num Guessing Game");
         stage.show();
@@ -209,5 +224,7 @@ public class HomePage extends Application {
         attempts = 3;
         check.setDisable(false);
         Attempt.setText("Remaining Attempts : " + attempts);
+        GuessNum();
+        return;
     }
 }
