@@ -1,2 +1,2 @@
-# OIBSIP
+# Demo - Projects
 Author - Mohit Ingale
