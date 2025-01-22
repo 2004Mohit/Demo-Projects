@@ -1,2 +1,2 @@
-# Demo - Projects
+# Projects
 Author - Mohit Ingale
